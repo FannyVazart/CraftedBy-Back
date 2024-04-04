@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_orders', function (Blueprint $table) {
-            $table->id();
+            $table->integer('quantity');
+            $table->foreignUuid('product_id')->references('id')->on('products');
+            $table->foreignUuid('order_id')->references('id')->on('orders');
             $table->timestamps();
         });
     }
