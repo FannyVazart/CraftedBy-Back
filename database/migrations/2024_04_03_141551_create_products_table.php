@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->integer('price');
-            $table->integer('quantity');
-            $table->string('material');
-            $table->string('color');
-            $table->string('size');
-            $table->string('category');
-            $table->string('img_url');
+            $table->integer('quantity')->nullable();
+            $table->string('material')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+            $table->string('category')->nullable();
+            $table->string('img_url')->nullable();
             $table->foreignUuid('shop_id')->references('id')->on('shops');
             $table->timestamps();
         });

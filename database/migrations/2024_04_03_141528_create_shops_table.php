@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('theme');
             $table->longText('biography');
-            $table->longText('specialties');
-            $table->string('location');
-            $table->longText('techniques');
-            $table->string('img_url');
+            $table->longText('specialties')->nullable();
+            $table->string('location')->nullable();
+            $table->longText('techniques')->nullable();
+            $table->string('img_url')->nullable();
             $table->foreignUuid('user_id')->references('id')->on('users');
             $table->timestamps();
         });
