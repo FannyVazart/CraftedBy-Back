@@ -11,6 +11,7 @@ class Product extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'description',
@@ -21,6 +22,7 @@ class Product extends Model
         'size',
         'category',
         'image_url',
+        'shop_id'
     ];
 
     public function shops()

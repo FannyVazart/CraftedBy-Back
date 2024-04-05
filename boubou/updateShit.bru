@@ -1,0 +1,24 @@
+meta {
+  name: updateShit
+  type: http
+  seq: 7
+}
+
+put {
+  url: http://127.0.0.1:8000/products/9bba004b-cc73-4f0a-bf94-e2b39cddc661
+  body: json
+  auth: none
+}
+
+headers {
+  X-CSRF-TOKEN: gKnRaVKoxtk6KjVHBy2bDUQSxzBw9jAKLckftMzd
+}
+
+body:json {
+  {
+    "name": "New year new me",
+    "description": "sunday monday happy days",
+    "price": 325,
+    "shop_id": "9bba004b-9f9a-492d-8fba-9422d58ab61d"
+  }
+}
