@@ -1,0 +1,22 @@
+meta {
+  name: create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://127.0.0.1:8000/orders/create
+  body: json
+  auth: none
+}
+
+headers {
+  X-CSRF-TOKEN: qfZN6Daex82MPz4PDB7MYlyFmYQnWBilcr07SGNt
+}
+
+body:json {
+  {
+  "date": "1987-12-15",
+  "user_id": "9bba004b-8fe3-4a37-80dc-758c16a59b43"
+  }
+}

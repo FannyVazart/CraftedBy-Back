@@ -10,6 +10,7 @@ class Shop extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'theme',
@@ -18,6 +19,7 @@ class Shop extends Model
         'location',
         'techniques',
         'image_url',
+        'user_id'
     ];
 
     public function products()

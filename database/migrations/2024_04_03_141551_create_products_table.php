@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('size')->nullable();
             $table->string('category')->nullable();
             $table->string('img_url')->nullable();
-            $table->foreignUuid('shop_id')->references('id')->on('shops');
+            $table->foreignUuid('shop_id')->references('id')->on('shops')->onDelete('cascade');
             $table->timestamps();
         });
     }

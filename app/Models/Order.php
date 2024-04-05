@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Order extends Model
 {
     use HasFactory, HasUuids;
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'date',
+        'user_id',
+    ];
 
     public function users()
     {

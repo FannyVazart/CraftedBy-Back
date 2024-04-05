@@ -1,0 +1,24 @@
+meta {
+  name: create
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://127.0.0.1:8000/shops/create
+  body: json
+  auth: none
+}
+
+headers {
+  X-CSRF-TOKEN: qfZN6Daex82MPz4PDB7MYlyFmYQnWBilcr07SGNt
+}
+
+body:json {
+  {
+    "name": "lolilooooo",
+    "theme": "blue",
+    "biography": "fuck fuck fuck",
+    "user_id": "9bba004b-86b8-428f-8ff4-8948b3236ddc"
+  }
+}

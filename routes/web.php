@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,9 +31,31 @@ Route::delete('/products/{id}', [ProductController::class, 'destroy']);
  */
 Route::get('/users', [ProfileController::class, 'index']);
 Route::get('/users/{id}', [ProfileController::class, 'show']);
+Route::post('/users/create', [ProfileController::class, 'store']);
+Route::put('/users/{id}', [ProfileController::class, 'update']);
+// Route::delete('/users/{id}', [ProfileController::class, 'destroy']);
 
+/**
+ * Routes for orders
+ */
+Route::get('/orders', [OrderController::class, 'index']);
+Route::get('/orders/{id}', [OrderController::class, 'show']);
+Route::post('/orders/create', [OrderController::class, 'store']);
+Route::put('/orders/{id}', [OrderController::class, 'update']);
+Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
+/**
+ * Routes for orders
+ */
+Route::get('/shops', [ShopController::class, 'index']);
+Route::get('/shops/{id}', [ShopController::class, 'show']);
+Route::post('/shops/create', [ShopController::class, 'store']);
+//Route::put('/orders/{id}', [OrderController::class, 'update']);
+//Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
+/**
+ * Routes for the dashboard (auth)
+ */
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

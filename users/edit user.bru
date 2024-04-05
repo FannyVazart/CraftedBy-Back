@@ -1,0 +1,23 @@
+meta {
+  name: edit user
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://127.0.0.1:8000/users/9bba004b-7787-431f-815b-87f7bbada148
+  body: json
+  auth: none
+}
+
+headers {
+  X-CSRF-TOKEN: gKnRaVKoxtk6KjVHBy2bDUQSxzBw9jAKLckftMzd
+}
+
+body:json {
+  {
+    "name": "New new newwwww",
+    "email": "bioubiou@biou.com",
+    "password": "blablablablablou"
+  }
+}

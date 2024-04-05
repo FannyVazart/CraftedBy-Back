@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('location')->nullable();
             $table->longText('techniques')->nullable();
             $table->string('img_url')->nullable();
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

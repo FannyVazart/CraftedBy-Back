@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -44,39 +46,97 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Store a newly created resource in storage.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
-        $request->user()->fill($request->validated());
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return response()->json(['message' => 'User added successfully.']);
     }
 
     /**
-     * Delete the user's account.
+     * Update the specified resource in storage.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function update(Request $request, $uuid)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $user = User::where('id', $uuid)->firstOrFail();
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
         ]);
 
-        $user = $request->user();
+        return response()->json(['message' => 'User updated successfully.']);
+    }
 
-        Auth::logout();
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($uuid)
+    {
+        $user = User::where('id', $uuid)->firstOrFail();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
 
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return response()->json(['message' => 'User deleted successfully.']);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    /**
+//     * Update the user's profile information.
+//     */
+//    public function update(ProfileUpdateRequest $request): RedirectResponse
+//    {
+//        $request->user()->fill($request->validated());
+//
+//        if ($request->user()->isDirty('email')) {
+//            $request->user()->email_verified_at = null;
+//        }
+//
+//        $request->user()->save();
+//
+//        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+//    }
+//
+//    /**
+//     * Delete the user's account.
+//     */
+//    public function destroy(Request $request): RedirectResponse
+//    {
+//        $request->validateWithBag('userDeletion', [
+//            'password' => ['required', 'current_password'],
+//        ]);
+//
+//        $user = $request->user();
+//
+//        Auth::logout();
+//
+//        $user->delete();
+//
+//        $request->session()->invalidate();
+//        $request->session()->regenerateToken();
+//
+//        return Redirect::to('/');
+//    }
 }

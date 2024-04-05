@@ -1,0 +1,22 @@
+meta {
+  name: edit
+  type: http
+  seq: 7
+}
+
+put {
+  url: http://127.0.0.1:8000/orders/9bba004b-f56f-4fce-b324-17c846a3e73b
+  body: json
+  auth: none
+}
+
+headers {
+  X-CSRF-TOKEN: qfZN6Daex82MPz4PDB7MYlyFmYQnWBilcr07SGNt
+}
+
+body:json {
+  {
+  "date": "2253-12-15",
+  "user_id": "9bba004b-8fe3-4a37-80dc-758c16a59b43"
+  }
+}
