@@ -17,8 +17,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::all();
-        return response()->json($orders);
+        return Order::all();
     }
 
     /**
@@ -26,42 +25,19 @@ class OrderController extends Controller
      */
     public function show($uuid)
     {
-
-        $order = Order::where('id', $uuid)->firstOrFail();
-
-        return response()->json($order);
+        return Order::where('id', $uuid)->firstOrFail();
     }
-
-//    /**
-//     * Show the form for creating a new resource.
-//     */
-//    public function create()
-//    {
-//        //
-//    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): JsonResponse
     {
-        Order::create([
+        return Order::create([
             'date' => $request->date,
             'user_id' => $request->user_id,
         ]);
-
-        return response()->json(['message' => 'Order added successfully.']);
     }
-
-
-//
-//    /**
-//     * Show the form for editing the specified resource.
-//     */
-//    public function edit(Order $order)
-//    {
-//        //
-//    }
 
     /**
      * Update the specified resource in storage.
@@ -70,12 +46,10 @@ class OrderController extends Controller
     {
         $product = Order::where('id', $uuid)->firstOrFail();
 
-        $product->update([
+        return $product->update([
             'date' => $request->date,
             'user_id' => $request->user_id,
         ]);
-
-        return response()->json(['message' => 'Order updated successfully.']);
     }
 
     /**
@@ -89,8 +63,6 @@ class OrderController extends Controller
             return response()->json(['message' => 'Order not found.'], 404);
         }
 
-        $order->delete();
-
-        return response()->json(['message' => 'Product deleted successfully.']);
+        return $order->delete();
     }
 }

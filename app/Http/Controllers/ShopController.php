@@ -17,8 +17,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shops = Shop::all();
-        return response()->json($shops);
+        return Shop::all();
     }
 
     /**
@@ -26,56 +25,48 @@ class ShopController extends Controller
      */
     public function show($uuid)
     {
-
-        $shop = Shop::where('id', $uuid)->firstOrFail();
-
-        return response()->json($shop);
+        return Shop::where('id', $uuid)->firstOrFail();
     }
-
-//    /**
-//     * Show the form for creating a new resource.
-//     */
-//    public function create()
-//    {
-//        //
-//    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request): JsonResponse
     {
-        Shop::create([
+        return Shop::create([
             'name' => $request->name,
             'theme' => $request->theme,
             'biography' => $request->biography,
             'user_id' => $request->user_id
         ]);
-
-        return response()->json(['message' => 'Shop added successfully.']);
     }
-
-//    /**
-//     * Show the form for editing the specified resource.
-//     */
-//    public function edit(Shop $shop)
-//    {
-//        //
-//    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateShopRequest $request, Shop $shop)
+    public function update(Request $request, $uuid)
     {
-        //
+        $shop = Shop::where('id', $uuid)->firstOrFail();
+
+        return $shop->update([
+            'name' => $request->name,
+            'theme' => $request->theme,
+            'biography' => $request->biography,
+            'user_id' => $request->user_id
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Shop $shop)
+    public function destroy($uuid)
     {
-        //
+        $shop = Shop::where('id', $uuid)->firstOrFail();
+
+        if (!$shop) {
+            return response()->json(['message' => 'Shop not found.'], 404);
+        }
+
+        return $shop->delete();
     }
 }

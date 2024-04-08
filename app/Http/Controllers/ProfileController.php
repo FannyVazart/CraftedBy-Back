@@ -30,8 +30,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return response()->json($users);
+        return User::all();
     }
 
     /**
@@ -39,10 +38,7 @@ class ProfileController extends Controller
      */
     public function show($uuid)
     {
-
-        $user = User::where('id', $uuid)->firstOrFail();
-
-        return response()->json($user);
+       return User::where('id', $uuid)->firstOrFail();
     }
 
     /**
@@ -50,13 +46,11 @@ class ProfileController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        User::create([
+        return User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-
-        return response()->json(['message' => 'User added successfully.']);
     }
 
     /**
@@ -66,13 +60,11 @@ class ProfileController extends Controller
     {
         $user = User::where('id', $uuid)->firstOrFail();
 
-        $user->update([
+        return $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-
-        return response()->json(['message' => 'User updated successfully.']);
     }
 
     /**
@@ -86,9 +78,7 @@ class ProfileController extends Controller
             return response()->json(['message' => 'User not found.'], 404);
         }
 
-        $user->delete();
-
-        return response()->json(['message' => 'User deleted successfully.']);
+        return $user->delete();
     }
 
 
