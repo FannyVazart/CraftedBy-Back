@@ -19,6 +19,7 @@ Route::get('/csrf', function () {
  */
 
 Route::apiResource('products', ProductController::class);
+Route::post('/products/create', [ProductController::class, 'store']);
 
 Route::get('/products/shop/{id}', [ProductController::class, 'getProductsByShop']);
 Route::get('/products/category/{category}', [ProductController::class, 'getProductsByCategory']);
@@ -32,17 +33,20 @@ Route::get('/products/size/{size}', [ProductController::class, 'getProductsBySiz
  * Routes for users
  */
 Route::apiResource('users', ProfileController::class);
+Route::post('/users/create', [ProfileController::class, 'store']);
 
 /**
  * Routes for orders
  */
 
 Route::apiResource('orders', OrderController::class);
+Route::post('/orders/create', [OrderController::class, 'store']);
 
 /**
  * Routes for shops
  */
 Route::apiResource('shops', ShopController::class);
+Route::post('/shops/create', [ShopController::class, 'store']);
 
 /**
  * Routes for the dashboard (auth)

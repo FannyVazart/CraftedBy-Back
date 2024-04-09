@@ -31,7 +31,7 @@ class ShopController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreShopRequest $request)
     {
         return Shop::create([
             'name' => $request->name,
@@ -44,7 +44,7 @@ class ShopController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $uuid)
+    public function update(UpdateShopRequest $request, $uuid)
     {
         $shop = Shop::where('id', $uuid)->firstOrFail();
 

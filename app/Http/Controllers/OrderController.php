@@ -31,7 +31,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreOrderRequest $request)
     {
         return Order::create([
             'date' => $request->date,
@@ -42,7 +42,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $uuid)
+    public function update(UpdateOrderRequest $request, $uuid)
     {
         $product = Order::where('id', $uuid)->firstOrFail();
 
