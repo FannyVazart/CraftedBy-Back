@@ -81,16 +81,51 @@ class ProfileController extends Controller
         return $user->delete();
     }
 
+    /**
+     * Handle an incoming registration request.
+     */
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response(['message' => 'No credentials'], 401);
+        }
 
+            $user = Auth::user();
+            $success = $user->createToken('authToken')->plainTextToken;
+            return response(['token' => $success], 200);
+    }
 
+    /**
+     * Display the user's profile information.
+     */
+    public function userDetails()
+    {
+        if (Auth::check()) {
 
+            $user = Auth::user();
 
+            return response(['data' => $user],200);
+        }
 
+        return response(['data' => 'Unauthorized'],401);
+    }
 
+    /**
+     * Logout the user.
+     */
+    public function logout()
+    {
+        $user = Auth::user();
 
+        $user->currentAccessToken()->delete();
 
-
+        return response(['data' => 'User Logout successfully.'],200);
+    }
 
 
 //    /**
