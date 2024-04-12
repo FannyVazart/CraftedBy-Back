@@ -17,11 +17,11 @@ Route::get('/csrf', function () {
 /**
  * Routes for products
  */
-
 Route::apiResource('products', ProductController::class);
-Route::post('/products/create', [ProductController::class, 'store']);
+
 
 Route::get('/products/shop/{id}', [ProductController::class, 'getProductsByShop']);
+
 Route::get('/products/category/{category}', [ProductController::class, 'getProductsByCategory']);
 Route::get('/products/search/{name}', [ProductController::class, 'getProductsByName']);
 Route::get('/products/price/{price}', [ProductController::class, 'getProductsByPrice']);
@@ -42,25 +42,34 @@ Route::post('/users/create', [ProfileController::class, 'store']);
 Route::apiResource('orders', OrderController::class);
 Route::post('/orders/create', [OrderController::class, 'store']);
 
+
+
+Route::get('/orders/user/{id}', [OrderController::class, 'getOrdersByUser']);
+
 /**
  * Routes for shops
  */
 Route::apiResource('shops', ShopController::class);
-Route::post('/shops/create', [ShopController::class, 'store']);
+
+Route::get('/shops/user/{id}', [ShopController::class, 'getShopsByUser']);
 
 /**
  * Routes for the auth
  */
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::post('/login', [ProfileController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [ProfileController::class, 'userDetails']);
     Route::get('/logout', [ProfileController::class, 'logout']);
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::post('/products/create', [ProductController::class, 'store']);
+    Route::post('/shops/create', [ShopController::class, 'store']);
 });
+
+/**
+ * Routes products in orders
+ */
+Route::post('/orders/{order_id}/products/{product_id}/{quantity}', [OrderController::class, 'addProductToOrder']);
+Route::delete('/orders/{order_id}/products/{product_id}', [OrderController::class, 'removeProductFromOrder']);
+

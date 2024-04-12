@@ -7,7 +7,9 @@ use App\Models\Shop;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Request;
 
 class ShopController extends Controller
@@ -29,6 +31,18 @@ class ShopController extends Controller
     }
 
     /**
+     * Display the specified resource if user is the right one.
+     */
+    public function showIfAllowed($user_id, $shop_id)
+    {
+        $shop = Shop::where('id', $shop_id)->firstOrFail();
+        if ($shop->user_id == $user_id) {
+            return $shop;
+        }
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreShopRequest $request)
@@ -39,6 +53,18 @@ class ShopController extends Controller
             'biography' => $request->biography,
             'user_id' => $request->user_id
         ]);
+    }
+
+    /**
+     * Store a newly created resource, using the user_id for authenticated user.
+     */
+    public function saveShop(StoreShopRequest $request)
+    {
+        $shop = new Shop(['name' => $request->name, 'theme' => $request->theme, 'biography' => $request->biography]);
+
+        $user = User::find(Auth::id());
+
+        $user->shops()->save($shop);
     }
 
     /**
@@ -69,4 +95,20 @@ class ShopController extends Controller
 
         return $shop->delete();
     }
+
+
+    /* Custom methods */
+    public function getShopsByUser($userId)
+    {
+        return Shop::where('user_id', $userId)->firstOrFail();
+    }
+
+    /**
+     * Permissions
+     */
+
+
+
+
+
 }

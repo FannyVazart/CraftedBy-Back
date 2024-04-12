@@ -13,6 +13,7 @@ class UpdateOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // recup product, utilisateur de la request
         return true;
     }
 

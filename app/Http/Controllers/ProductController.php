@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,17 @@ class ProductController extends Controller
         return Product::where('id', $uuid)->firstOrFail();
     }
 
+    /**
+     * Display the specified resource if user is the right one.
+     */
+    public function showIfAllowed($user_id, $product_id)
+    {
+        $product = Product::where('id', $product_id)->firstOrFail();
+        if ($product->user_id == $user_id) {
+            return $product;
+        }
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -69,6 +81,13 @@ class ProductController extends Controller
         return $prod->delete();
     }
 
+
+    /* Custom methods */
+
+
+    /**
+     * Filters
+     */
     public function getProductsByShop($shop_id)
     {
         return Product::where('shop_id', $shop_id)->get();
