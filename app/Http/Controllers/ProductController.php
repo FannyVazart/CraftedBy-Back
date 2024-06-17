@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Order;
@@ -12,7 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/products",
+     *     summary="Get a list of products",
+     *     tags={"products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
      */
     public function index()
     {

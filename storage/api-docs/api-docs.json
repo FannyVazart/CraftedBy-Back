@@ -1,0 +1,30 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CraftedBy API",
+        "description": "Cette API permet d'accéder à toutes les fonctionnalités de l'application CraftedBy.",
+        "contact": {
+            "email": "fanny.vazart@le-campus-numerique.fr"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/products": {
+            "get": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get a list of products",
+                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        }
+    }
+}
