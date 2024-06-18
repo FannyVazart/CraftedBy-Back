@@ -9,13 +9,189 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/products": {
+        "/api/products": {
             "get": {
                 "tags": [
-                    "products"
+                    "Products"
                 ],
                 "summary": "Get a list of products",
-                "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
+                "operationId": "1bfaa78d1c2c3848ab8165c5dadcad3e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Add a new product.",
+                "operationId": "addProduct",
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "petstore_auth": [
+                            "write:pets",
+                            "read:pets"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/api/product/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Find product by ID",
+                "description": "Returns a single product",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of product to return",
+                        "required": true,
+                        "schema": {
+                            "type": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid ID supplier"
+                    },
+                    "404": {
+                        "description": "Pet not found"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/api/products/shop/{id]": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products from 1 shop",
+                "operationId": "2191e19f47f3a518540ae382950cbd35",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{category]": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products from 1 category",
+                "operationId": "7bc4e5b188a4a16ef740fbd1a3e41835",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{price}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products of a price",
+                "operationId": "d79c64a45eea80afa8dd3925c2a6e161",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{color}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products of a color",
+                "operationId": "4abe34d8bee6e8ffdfc16ba63abdd022",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{material}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products of a material",
+                "operationId": "581e7a3b8f89e118d95297369ebbee1f",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{size}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products of a size",
+                "operationId": "ccd8ca44aa678a43d154fc007b66bf9f",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/products/{name}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get all the products of a name",
+                "operationId": "fb9be688953226e158fe4f76326be407",
                 "responses": {
                     "200": {
                         "description": "Successful operation"

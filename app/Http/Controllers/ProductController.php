@@ -9,14 +9,15 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Polyfill\Uuid\Uuid;
 
 class ProductController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/products",
+     *     path="/api/products",
      *     summary="Get a list of products",
-     *     tags={"products"},
+     *     tags={"Products"},
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=400, description="Invalid request")
      * )
@@ -27,16 +28,44 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/product/{id}",
+     *     tags={"Products"},
+     *     summary="Find product by ID",
+     *     description="Returns a single product",
+     *     operationId="show",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of product to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="uuid",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplier"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pet not found"
+     *     ),
+     *     security={
+     *         {"api_key": {}}
+     *     }
+     * )
      */
     public function show($uuid)
     {
         return Product::where('id', $uuid)->firstOrFail();
     }
 
-    /**
-     * Display the specified resource if user is the right one.
-     */
+
     public function showIfAllowed($user_id, $product_id)
     {
         $product = Product::where('id', $product_id)->firstOrFail();
@@ -47,7 +76,20 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add a new product.
+     *
+     * @OA\Post(
+     *     path="/api/products",
+     *     tags={"Products"},
+     *     operationId="addProduct",
+     *     @OA\Response(
+     *         response=405,
+     *         description="Invalid input"
+     *     ),
+     *     security={
+     *         {"petstore_auth": {"write:pets", "read:pets"}}
+     *     }
+     * )
      */
     public function store(StoreProductRequest $request)
     {
@@ -95,36 +137,100 @@ class ProductController extends Controller
     /**
      * Filters
      */
+
+    /**
+     * @OA\Get(
+     *     path="/api/products/shop/{id]",
+     *     summary="Get all the products from 1 shop",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByShop($shop_id)
     {
         return Product::where('shop_id', $shop_id)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{category]",
+     *     summary="Get all the products from 1 category",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByCategory($category_id)
     {
         return Product::where('category_id', $category_id)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{price}",
+     *     summary="Get all the products of a price",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByPrice($price)
     {
         return Product::where('price', $price)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{color}",
+     *     summary="Get all the products of a color",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByColor($color)
     {
         return Product::where('color', $color)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{material}",
+     *     summary="Get all the products of a material",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByMaterial($material)
     {
         return Product::where('material', $material)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{size}",
+     *     summary="Get all the products of a size",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsBySize($size)
     {
         return Product::where('size', $size)->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/products/{name}",
+     *     summary="Get all the products of a name",
+     *     tags={"Products"},
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=400, description="Invalid request")
+     * )
+     */
     public function getProductsByName($name)
     {
         return Product::where('name', $name)->get();

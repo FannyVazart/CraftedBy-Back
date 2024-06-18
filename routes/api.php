@@ -42,8 +42,6 @@ Route::post('/users/create', [ProfileController::class, 'store']);
 Route::apiResource('orders', OrderController::class);
 Route::post('/orders/create', [OrderController::class, 'store']);
 
-
-
 Route::get('/orders/user/{id}', [OrderController::class, 'getOrdersByUser']);
 
 /**
