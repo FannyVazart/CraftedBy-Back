@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'name' => fake()-> lastName(),
             'description' => fake() -> text(30),
             'price' => random_int(1, 70),
+            'img_url' => 'https://picsum.photos/400/500',
             'shop_id' => fake() -> randomElement($shopIds)
         ];
     }

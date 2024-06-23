@@ -18,7 +18,7 @@ class Shop extends Model
         'specialties',
         'location',
         'techniques',
-        'image_url',
+        'img_url',
         'user_id'
     ];
 

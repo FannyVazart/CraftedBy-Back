@@ -1,11 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "CraftedBy API",
-        "description": "Cette API permet d'accéder à toutes les fonctionnalités de l'application CraftedBy.",
-        "contact": {
-            "email": "fanny.vazart@le-campus-numerique.fr"
-        },
+        "title": "API Documentation",
+        "description": "Documentation for the CraftedBy API",
         "version": "1.0.0"
     },
     "paths": {
@@ -29,31 +26,36 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "Add a new product.",
+                "description": "Creates a new product",
                 "operationId": "addProduct",
-                "responses": {
-                    "405": {
-                        "description": "Invalid input"
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
                     }
                 },
-                "security": [
-                    {
-                        "petstore_auth": [
-                            "write:pets",
-                            "read:pets"
-                        ]
+                "responses": {
+                    "201": {
+                        "description": "Product added"
+                    },
+                    "default": {
+                        "description": "Product not added, oops"
                     }
-                ]
+                }
             }
         },
-        "/api/product/{id}": {
+        "/api/products/{id}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Find product by ID",
                 "description": "Returns a single product",
-                "operationId": "show",
+                "operationId": "7ab21ddb713501f3d4c2914892c02a21",
                 "parameters": [
                     {
                         "name": "id",
@@ -61,7 +63,10 @@
                         "description": "ID of product to return",
                         "required": true,
                         "schema": {
-                            "type": "uuid"
+                            "description": "A UUID string with 36 characters",
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
                         }
                     }
                 ],
@@ -73,40 +78,52 @@
                         "description": "Invalid ID supplier"
                     },
                     "404": {
-                        "description": "Pet not found"
+                        "description": "Product not found"
                     }
-                },
-                "security": [
-                    {
-                        "api_key": []
-                    }
-                ]
+                }
             }
         },
-        "/api/products/shop/{id]": {
+        "/api/products/shop/{idshop}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get all the products from 1 shop",
-                "operationId": "2191e19f47f3a518540ae382950cbd35",
+                "operationId": "e37e033f62ba1d7262b82523a5076f1f",
+                "parameters": [
+                    {
+                        "name": "idshop",
+                        "in": "path",
+                        "description": "ID of the shop",
+                        "required": true,
+                        "schema": {
+                            "description": "A UUID string with 36 characters",
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "successful operation"
                     },
                     "400": {
-                        "description": "Invalid request"
+                        "description": "Invalid ID supplier"
+                    },
+                    "404": {
+                        "description": "Product not found"
                     }
                 }
             }
         },
-        "/api/products/{category]": {
+        "/api/products/{category}": {
             "get": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Get all the products from 1 category",
-                "operationId": "7bc4e5b188a4a16ef740fbd1a3e41835",
+                "operationId": "b93b8da7f89613b3a7912162963c40a2",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -200,6 +217,58 @@
                         "description": "Invalid request"
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Product": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "quantity": {
+                        "type": "number"
+                    },
+                    "material": {
+                        "type": "string"
+                    },
+                    "color": {
+                        "type": "string"
+                    },
+                    "size": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "img_url": {
+                        "type": "string"
+                    },
+                    "shop_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             }
         }
     }

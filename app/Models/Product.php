@@ -21,7 +21,7 @@ class Product extends Model
         'color',
         'size',
         'category',
-        'image_url',
+        'img_url',
         'shop_id'
     ];
 

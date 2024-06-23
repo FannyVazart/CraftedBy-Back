@@ -29,35 +29,25 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/product/{id}",
+     *     path="/api/products/{id}",
      *     tags={"Products"},
      *     summary="Find product by ID",
      *     description="Returns a single product",
-     *     operationId="show",
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="ID of product to return",
      *         required=true,
      *         @OA\Schema(
-     *             type="uuid",
+     *             type="string",
+     *             format="uuid",
+     *             description="A UUID string with 36 characters",
+     *             example="123e4567-e89b-12d3-a456-426614174000"
      *         )
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="successful operation",
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid ID supplier"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Pet not found"
-     *     ),
-     *     security={
-     *         {"api_key": {}}
-     *     }
+     *     @OA\Response(response=200, description="successful operation"),
+     *     @OA\Response(response=400, description="Invalid ID supplier"),
+     *     @OA\Response(response=404, description="Product not found"),
      * )
      */
     public function show($uuid)
@@ -76,19 +66,17 @@ class ProductController extends Controller
     }
 
     /**
-     * Add a new product.
-     *
      * @OA\Post(
      *     path="/api/products",
-     *     tags={"Products"},
      *     operationId="addProduct",
-     *     @OA\Response(
-     *         response=405,
-     *         description="Invalid input"
-     *     ),
-     *     security={
-     *         {"petstore_auth": {"write:pets", "read:pets"}}
-     *     }
+     *     description="Creates a new product",
+     *     tags={"Products"},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/Product")
+     *      ),
+     * @OA\Response(response=201, description="Product added"),
+     * @OA\Response(response="default", description="Product not added, oops")
      * )
      */
     public function store(StoreProductRequest $request)
@@ -140,11 +128,24 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/products/shop/{id]",
+     *     path="/api/products/shop/{idshop}",
      *     summary="Get all the products from 1 shop",
      *     tags={"Products"},
-     *     @OA\Response(response=200, description="Successful operation"),
-     *     @OA\Response(response=400, description="Invalid request")
+     * @OA\Parameter(
+     *     name="idshop",
+     *     in="path",
+     *     description="ID of the shop",
+     *     required=true,
+     *     @OA\Schema(
+     *          type="string",
+     *          format="uuid",
+     *          description="A UUID string with 36 characters",
+     *          example="123e4567-e89b-12d3-a456-426614174000"
+     *          )
+     *      ),
+     * @OA\Response(response=200, description="successful operation"),
+     * @OA\Response(response=400, description="Invalid ID supplier"),
+     * @OA\Response(response=404, description="Product not found"),
      * )
      */
     public function getProductsByShop($shop_id)
@@ -154,7 +155,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/products/{category]",
+     *     path="/api/products/{category}",
      *     summary="Get all the products from 1 category",
      *     tags={"Products"},
      *     @OA\Response(response=200, description="Successful operation"),

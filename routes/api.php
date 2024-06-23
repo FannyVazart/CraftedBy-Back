@@ -30,12 +30,6 @@ Route::get('/products/material/{material}', [ProductController::class, 'getProdu
 Route::get('/products/size/{size}', [ProductController::class, 'getProductsBySize']);
 
 /**
- * Routes for users
- */
-Route::apiResource('users', ProfileController::class);
-Route::post('/users/create', [ProfileController::class, 'store']);
-
-/**
  * Routes for orders
  */
 
@@ -71,3 +65,24 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/orders/{order_id}/products/{product_id}/{quantity}', [OrderController::class, 'addProductToOrder']);
 Route::delete('/orders/{order_id}/products/{product_id}', [OrderController::class, 'removeProductFromOrder']);
 
+
+/**
+ * Routes for users
+ */
+Route::apiResource('users', ProfileController::class);
+Route::post('/users/create', [ProfileController::class, 'store']);
+
+/**
+ * Routes for the dashboard (auth)
+ */
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
