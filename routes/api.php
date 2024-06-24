@@ -48,6 +48,7 @@ Route::get('/shops/user/{id}', [ShopController::class, 'getShopsByUser']);
 /**
  * Routes for the auth
  */
+
 Route::post('/login', [ProfileController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -78,6 +79,9 @@ Route::post('/users/create', [ProfileController::class, 'store']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

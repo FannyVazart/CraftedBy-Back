@@ -43,6 +43,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Générer un token d'authentification pour l'utilisateur
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
