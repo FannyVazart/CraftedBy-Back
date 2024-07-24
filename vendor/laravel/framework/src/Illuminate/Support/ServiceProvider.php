@@ -148,6 +148,24 @@ abstract class ServiceProvider
     }
 
     /**
+     * Replace the given configuration with the existing configuration recursively.
+     *
+     * @param  string  $path
+     * @param  string  $key
+     * @return void
+     */
+    protected function replaceConfigRecursivelyFrom($path, $key)
+    {
+        if (! ($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app->make('config');
+
+            $config->set($key, array_replace_recursive(
+                require $path, $config->get($key, [])
+            ));
+        }
+    }
+
+    /**
      * Load the given routes file if routes are not already cached.
      *
      * @param  string  $path
@@ -485,7 +503,7 @@ abstract class ServiceProvider
      * @param  string  $path
      * @return bool
      */
-    public static function addProviderToBootstrapFile(string $provider, string $path = null)
+    public static function addProviderToBootstrapFile(string $provider, ?string $path = null)
     {
         $path ??= app()->getBootstrapProvidersPath();
 

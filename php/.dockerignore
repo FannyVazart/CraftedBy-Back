@@ -1,0 +1,9 @@
+Dockerfile
+docker-compse.yml
+*.bru
+db-data
+logs
+node_modules
+boubou
+.env
+bootstrap

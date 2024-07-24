@@ -1,9 +1,0 @@
-{
-  "version": "1",
-  "name": "LaravelCraftedBy",
-  "type": "collection",
-  "ignore": [
-    "node_modules",
-    ".git"
-  ]
-}

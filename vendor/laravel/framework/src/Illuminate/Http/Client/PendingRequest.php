@@ -222,7 +222,7 @@ class PendingRequest
      * @param  array  $middleware
      * @return void
      */
-    public function __construct(Factory $factory = null, $middleware = [])
+    public function __construct(?Factory $factory = null, $middleware = [])
     {
         $this->factory = $factory;
         $this->middleware = new Collection($middleware);
@@ -691,7 +691,7 @@ class PendingRequest
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw(callable $callback = null)
+    public function throw(?callable $callback = null)
     {
         $this->throwCallback = $callback ?: fn () => null;
 
@@ -702,7 +702,6 @@ class PendingRequest
      * Throw an exception if a server or client error occurred and the given condition evaluates to true.
      *
      * @param  callable|bool  $condition
-     * @param  callable|null  $throwCallback
      * @return $this
      */
     public function throwIf($condition)
@@ -765,6 +764,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function get(string $url, $query = null)
     {
@@ -779,6 +780,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array|string|null  $query
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function head(string $url, $query = null)
     {
@@ -793,6 +796,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function post(string $url, $data = [])
     {
@@ -807,6 +812,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function patch(string $url, $data = [])
     {
@@ -821,6 +828,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function put(string $url, $data = [])
     {
@@ -835,6 +844,8 @@ class PendingRequest
      * @param  string  $url
      * @param  array  $data
      * @return \Illuminate\Http\Client\Response
+     *
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function delete(string $url, $data = [])
     {
@@ -871,6 +882,7 @@ class PendingRequest
      * @return \Illuminate\Http\Client\Response
      *
      * @throws \Exception
+     * @throws \Illuminate\Http\Client\ConnectionException
      */
     public function send(string $method, string $url, array $options = [])
     {
@@ -912,19 +924,25 @@ class PendingRequest
                             $response->throw($this->throwCallback);
                         }
 
-                        if ($attempt < $this->tries && $shouldRetry) {
+                        $potentialTries = is_array($this->tries)
+                            ? count($this->tries) + 1
+                            : $this->tries;
+
+                        if ($attempt < $potentialTries && $shouldRetry) {
                             $response->throw();
                         }
 
-                        if ($this->tries > 1 && $this->retryThrow) {
+                        if ($potentialTries > 1 && $this->retryThrow) {
                             $response->throw();
                         }
                     }
                 });
             } catch (ConnectException $e) {
-                $this->dispatchConnectionFailedEvent(new Request($e->getRequest()));
+                $exception = new ConnectionException($e->getMessage(), 0, $e);
 
-                throw new ConnectionException($e->getMessage(), 0, $e);
+                $this->dispatchConnectionFailedEvent(new Request($e->getRequest()), $exception);
+
+                throw $exception;
             }
         }, $this->retryDelay ?? 100, function ($exception) use (&$shouldRetry) {
             $result = $shouldRetry ?? ($this->retryWhenCallback ? call_user_func($this->retryWhenCallback, $exception, $this) : true);
@@ -1012,9 +1030,11 @@ class PendingRequest
             })
             ->otherwise(function (OutOfBoundsException|TransferException $e) {
                 if ($e instanceof ConnectException) {
-                    $this->dispatchConnectionFailedEvent(new Request($e->getRequest()));
+                    $exception = new ConnectionException($e->getMessage(), 0, $e);
 
-                    return new ConnectionException($e->getMessage(), 0, $e);
+                    $this->dispatchConnectionFailedEvent(new Request($e->getRequest()), $exception);
+
+                    return $exception;
                 }
 
                 return $e instanceof RequestException && $e->hasResponse() ? $this->populateResponse($this->newResponse($e->getResponse())) : $e;
@@ -1055,7 +1075,11 @@ class PendingRequest
         }
 
         if ($attempt < $this->tries && $shouldRetry) {
-            $options['delay'] = value($this->retryDelay, $attempt, $response->toException());
+            $options['delay'] = value(
+                $this->retryDelay,
+                $attempt,
+                $response instanceof Response ? $response->toException() : $response
+            );
 
             return $this->makePromise($method, $url, $options, $attempt + 1);
         }
@@ -1205,7 +1229,7 @@ class PendingRequest
      */
     protected function getReusableClient()
     {
-        return $this->client = $this->client ?: $this->createClient($this->buildHandlerStack());
+        return $this->client ??= $this->createClient($this->buildHandlerStack());
     }
 
     /**
@@ -1476,12 +1500,13 @@ class PendingRequest
      * Dispatch the ConnectionFailed event if a dispatcher is available.
      *
      * @param  \Illuminate\Http\Client\Request  $request
+     * @param  \Illuminate\Http\Client\ConnectionException  $exception
      * @return void
      */
-    protected function dispatchConnectionFailedEvent(Request $request)
+    protected function dispatchConnectionFailedEvent(Request $request, ConnectionException $exception)
     {
         if ($dispatcher = $this->factory?->getDispatcher()) {
-            $dispatcher->dispatch(new ConnectionFailed($request));
+            $dispatcher->dispatch(new ConnectionFailed($request, $exception));
         }
     }
 

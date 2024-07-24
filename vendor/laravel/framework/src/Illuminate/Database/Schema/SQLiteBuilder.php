@@ -34,16 +34,17 @@ class SQLiteBuilder extends Builder
     /**
      * Get the tables for the database.
      *
+     * @param  bool  $withSize
      * @return array
      */
-    public function getTables()
+    public function getTables($withSize = true)
     {
-        $withSize = false;
-
-        try {
-            $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
-        } catch (QueryException $e) {
-            //
+        if ($withSize) {
+            try {
+                $withSize = $this->connection->scalar($this->grammar->compileDbstatExists());
+            } catch (QueryException $e) {
+                $withSize = false;
+            }
         }
 
         return $this->connection->getPostProcessor()->processTables(
@@ -101,6 +102,45 @@ class SQLiteBuilder extends Builder
         $this->connection->select($this->grammar->compileDisableWriteableSchema());
 
         $this->connection->select($this->grammar->compileRebuild());
+    }
+
+    /**
+     * Set the busy timeout.
+     *
+     * @param  int  $milliseconds
+     * @return bool
+     */
+    public function setBusyTimeout($milliseconds)
+    {
+        return $this->connection->statement(
+            $this->grammar->compileSetBusyTimeout($milliseconds)
+        );
+    }
+
+    /**
+     * Set the journal mode.
+     *
+     * @param  string  $mode
+     * @return bool
+     */
+    public function setJournalMode($mode)
+    {
+        return $this->connection->statement(
+            $this->grammar->compileSetJournalMode($mode)
+        );
+    }
+
+    /**
+     * Set the synchronous mode.
+     *
+     * @param  int  $mode
+     * @return bool
+     */
+    public function setSynchronous($mode)
+    {
+        return $this->connection->statement(
+            $this->grammar->compileSetSynchronous($mode)
+        );
     }
 
     /**
